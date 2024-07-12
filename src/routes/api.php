@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\SellerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,15 +17,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-
-
-
-
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    Route::post('/add/shop', [SellerController::class, 'addShop']);
+    Route::get('/get/shop', [SellerController::class, 'getShop']);
+    Route::put('/update/shop/{id}', [SellerController::class, 'updateShop']);
+    Route::delete('/delete/shop/{id}', [SellerController::class, 'deleteShop']);
 });
 
 
