@@ -7,15 +7,16 @@ use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class SellerController extends Controller
+class ShopController extends Controller
 {
-    public function addShop(Request $request){
-        try{
+    public function addShop(Request $request)
+    {
+        try {
             $shopValidate = Validator::make($request->all(), [
                 'name' => ['required']
             ]);
 
-            if ($shopValidate->fails()){
+            if ($shopValidate->fails()) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Error validate',
@@ -33,8 +34,7 @@ class SellerController extends Controller
                 'message' => 'Shop created',
 
             ], 201);
-
-        } catch (\Throwable $th){
+        } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
@@ -42,10 +42,11 @@ class SellerController extends Controller
         }
     }
 
-    public function getShop(Request $request){
+    public function getShop(Request $request)
+    {
         $userId = $request->user()->id;
 
-        $shops = Shop::where('user_id', $userId)->get();
+        $shops = Shop::all();
 
         return response()->json([
             'status' => true,
@@ -53,13 +54,14 @@ class SellerController extends Controller
         ], 200);
     }
 
-    public function updateShop(Request $request, $id){
-        try{
+    public function updateShop(Request $request, $id)
+    {
+        try {
             $shopValidate = Validator::make($request->all(), [
                 'name' => ['required']
             ]);
 
-            if ($shopValidate->fails()){
+            if ($shopValidate->fails()) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Error validate',
@@ -67,8 +69,8 @@ class SellerController extends Controller
                 ]);
             }
 
-            $shop = Shop::where('user_id', $request->user()->id);
-            $shop->findOrFail($id);
+            $shop = Shop::findOrFail($id);;
+
             $shop->update([
                 'name' => $request->name,
             ]);
@@ -78,8 +80,7 @@ class SellerController extends Controller
                 'message' => 'Shop updated',
 
             ], 201);
-
-        } catch (\Throwable $th){
+        } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
@@ -87,9 +88,9 @@ class SellerController extends Controller
         }
     }
 
-    public function deleteShop(Request $request, $id){
-        $shop = Shop::where('user_id', $request->user()->id)->where('id', $id)->firstOrFail();
-        $shop->delete();
+    public function deleteShop($id)
+    {
+        Shop::destroy($id);
 
         return response()->json([
             'status' => true,
